@@ -19,18 +19,35 @@ const settings = {
 //   https://docs.alchemy.com/reference/alchemy-sdk-api-surface-overview#api-surface
 const alchemy = new Alchemy(settings);
 
-function App() {
+async function App() {
   const [blockNumber, setBlockNumber] = useState();
+  const [transactions, setTransactions] = useState();
 
   useEffect(() => {
-    async function getBlockNumber() {
+    async function getBlockInfo() {
       setBlockNumber(await alchemy.core.getBlockNumber());
     }
+    getBlockInfo(); 
+  },[blockNumber]);
 
-    getBlockNumber();
-  });
-
-  return <div className="App">Block Number: {blockNumber}</div>;
+  const getBlockTransactions = async () => {
+    const valuesArray = await alchemy.core.getBlock();
+    let _transactions = valuesArray["transactions"];
+    setTransactions(_transactions);
+    return valuesArray;
+  }
+  getBlockTransactions();
+  
+  return (
+    <div className="App">
+      <div>
+        Block Number: {blockNumber}
+      </div>
+      <div>
+        Block: {getBlockTransactions}
+      </div>
+    </div>
+  );
 }
 
 export default App;
