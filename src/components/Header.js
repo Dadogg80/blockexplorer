@@ -4,11 +4,12 @@ import HeaderCSS from "./Header.module.css";
 
 
 const Header = (props) => {
-    const { blockNumber } = props;
+    const { blockNumber} = props;
+
     return (
         <header className="card">
-            <h2>Block Number:</h2>
-            <h3>{blockNumber}</h3>
+            <h2>Welcome to Viken Block Explorer</h2>
+            <h4>Current: {blockNumber}</h4>
         </header>
     )
 }
