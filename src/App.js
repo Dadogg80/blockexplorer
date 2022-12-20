@@ -2,6 +2,8 @@ import { Alchemy, Network } from 'alchemy-sdk';
 import { useEffect, useState } from 'react';
 
 import './App.css';
+import Header from './components/Header';
+import Nav from './components/Content';
 
 // Refer to the README doc for more information about using API
 // keys in client-side code. You should never do this in production
@@ -40,7 +42,7 @@ function App() {
     setHash(valuesArray["hash"]);
     setNonce(valuesArray["nonce"]);
     setNumber(valuesArray["number"]);
-    console.log(valuesArray);
+
   }
   const getBlockTransactions = async (hash) => {
     const receipt = await alchemy.core.getTransactionReceipt(hash);
@@ -49,35 +51,31 @@ function App() {
   }
   
   return (
+
     <div className="App">
       <div className='container'>
-
-      <div>
-        Block Number: {blockNumber}
-      </div>
-      {
-        hash &&  
-        <>
-        <div>
-          Hash: {hash}
+        <Header blockNumber={blockNumber}/>
+          <button type='btn' onClick={() => getBlock()}>Get Block Data</button>
+          <Nav hash={hash} nonce={nonce} number={number}/>
+        {
+          hash &&
+          <>
+            <div>
+              <p>Hash: {hash}</p>
+              <p>Noce: {nonce}</p>
+              <p>Number: {number}</p>
+            </div>
+            <div style={{ maxWidth: "100%" }}>
+              <ul className='card'>
+                <p>Transactions: {transactions.map((tx, i) => {
+                  return <div onClick={() => getBlockTransactions(tx)} key={i} style={{ border: "2px" }}>{i} | {tx}</div>;
+                })}
+                </p>
+              </ul>
+            </div>
+          </>
+        }
         </div>
-        <div>
-          Noce: {nonce}
-        </div>
-        <div>
-          Number: {number}
-        </div>
-        <div style={{maxWidth: "100%"}}>
-          <ul>
-            Transactions: {transactions.map((tx,i) => {
-              return <div onClick={() => getBlockTransactions(tx)} key={i} style={{border: "2px"}}>{i} | {tx}</div>
-            })}
-          </ul>
-        </div>
-      </>
-      }
-      <button type='button' onClick={() => getBlock()}>click</button>
-      </div>
     </div>
   );
 }

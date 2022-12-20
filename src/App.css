@@ -32,12 +32,6 @@
   color: #61dafb;
 }
 
-.container {
-  max-width: 50%;
-  background-color: #61dafb;
-  word-break: break-all;
-}
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

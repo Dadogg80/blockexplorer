@@ -5,9 +5,27 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: rgba(10, 10, 253, 0.795);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  word-break: break-all;
+}
+
+.card {
+  background-color: whitesmoke;
+  border-radius: 5px;
+  padding: 10px 20px 30px;
+  margin-top: 50px;
+}
+
+.block {
+  color: antiquewhite;
 }
