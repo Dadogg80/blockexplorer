@@ -19,32 +19,64 @@ const settings = {
 //   https://docs.alchemy.com/reference/alchemy-sdk-api-surface-overview#api-surface
 const alchemy = new Alchemy(settings);
 
-async function App() {
+function App() {
   const [blockNumber, setBlockNumber] = useState();
   const [transactions, setTransactions] = useState();
+  const [nonce, setNonce] = useState();
+  const [hash, setHash] = useState();
+  const [number, setNumber] = useState();
+  const [receipt, setReceipt] = useState();
 
   useEffect(() => {
     async function getBlockInfo() {
       setBlockNumber(await alchemy.core.getBlockNumber());
     }
     getBlockInfo(); 
-  },[blockNumber]);
+  },[]);
 
-  const getBlockTransactions = async () => {
+  const getBlock = async () => {
     const valuesArray = await alchemy.core.getBlock();
-    let _transactions = valuesArray["transactions"];
-    setTransactions(_transactions);
-    return valuesArray;
+    setTransactions(valuesArray["transactions"]);
+    setHash(valuesArray["hash"]);
+    setNonce(valuesArray["nonce"]);
+    setNumber(valuesArray["number"]);
+    console.log(valuesArray);
   }
-  getBlockTransactions();
+  const getBlockTransactions = async (hash) => {
+    const receipt = await alchemy.core.getTransactionReceipt(hash);
+    setReceipt(receipt);
+    console.log(receipt)
+  }
   
   return (
     <div className="App">
+      <div className='container'>
+
       <div>
         Block Number: {blockNumber}
       </div>
-      <div>
-        Block: {getBlockTransactions}
+      {
+        hash &&  
+        <>
+        <div>
+          Hash: {hash}
+        </div>
+        <div>
+          Noce: {nonce}
+        </div>
+        <div>
+          Number: {number}
+        </div>
+        <div style={{maxWidth: "100%"}}>
+          <ul>
+            Transactions: {transactions.map((tx,i) => {
+              return <div onClick={() => getBlockTransactions(tx)} key={i} style={{border: "2px"}}>{i} | {tx}</div>
+            })}
+          </ul>
+        </div>
+      </>
+      }
+      <button type='button' onClick={() => getBlock()}>click</button>
       </div>
     </div>
   );
