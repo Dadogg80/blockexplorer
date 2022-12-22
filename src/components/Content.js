@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import ContentCSS from './Content.module.css';
+import { Card, CardGroup, Button } from 'react-bootstrap';
+
 
 const Nav = (props) => {
   const [transactions, setTransactions] = useState();
@@ -25,43 +25,43 @@ const Nav = (props) => {
     setReceipt(_receipt);
     console.log(receipt);
   };
-
+  
   return (
-    <div className="card">
-      <div>
-        <Button className={ContentCSS.btn} onClick={getBlock}>Get Block Data</Button>
-      </div>
-      {
-        hash &&
-        <>
-          <div>
-            <h3 style={{ margin: "30px" }}>Block Information:</h3>
-            <hr style={{ margin: "40px" }} />
-            <h4>Hash</h4>
-            <label>{hash}</label>
-            <h4>Nonce</h4>
-            <label>{nonce}</label>
-            <h4>Blocknumber</h4>
-            <label>{number}</label>
-            <hr style={{ margin: "40px" }} />
-          </div>
-          <div className='card' style={{ maxWidth: "100%" }}>
-            <h3>Transactions:</h3>
-            <ul>
-              <div>
-                {transactions.map((tx, i) => (
-                  <div key={i} style={{ padding: "10px 10px", }} onClick={() => getBlockTransactions(tx)}>
-                    <span style={{ fontWidth: "400px" }}> {i} |  </span>
-                    {tx}
-                  </div>
-                ))}
-              </div>
-            </ul>
-          </div>
+    <>
+        <Button style={{margin: "15px"}} variant="primary" type="submit" onClick={() => getBlock()}>Get Data</Button>
+    { 
+          hash && (
+            <>
+            <Card style={{ maxWidth: "auto" }}>
+              <Card.Title>Block Information</Card.Title>
+              <Card.Body>
+                <Card.Text style={{ fontStyle: "bold" }}>Hash</Card.Text>
+                <label>{hash}</label>
+                <Card.Text style={{ textDecoration: "bold" }}>Nonce</Card.Text>
+                <label>{nonce}</label>
+                <Card.Text>Blocknumber</Card.Text>
+                <label>{number}</label>
+              </Card.Body>
+              <Card.Footer> Viken Blockchain Solutions </Card.Footer>
+              </Card>
+            <Card style={{ maxWidth: "auto" }}>
+                <Card.Title>Transactions:</Card.Title>
+                <Card.Body>
+                  <ul>
+                    {transactions.map((tx, i) => (
+                      <div key={i} style={{ padding: "10px 10px", }} onClick={() => getBlockTransactions(tx)}>
+                        <span style={{ fontWidth: "400px" }}> {i} |  </span>
+                        {tx}
+                      </div>
+                    ))}
+                  </ul>
+                </Card.Body>
+            </Card>
+              </>
+          )
+        }
         </>
-      }
-    </div>
-  );
+    );
 };
 
 export default Nav;

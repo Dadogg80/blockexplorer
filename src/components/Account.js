@@ -1,19 +1,22 @@
 import React, { useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Row, Col } from "react-bootstrap";
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 const Account = (props) => {
     const [address, setAddress] = useState("");
-    const [tokenBalances, setTokenBalances] = useState({});
+    const [tokenBalances, setTokenBalances] = useState();
     const [ethBalance, setEthBalance] = useState();
     const { alchemy } = props;
 
+    const tokens = [];
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const balance = await alchemy.core.getBalance(address, "latest");
         setEthBalance(balance["_hex"] / Math.pow(10, 18));
         const balances = await alchemy.core.getTokenBalances(address);
-        console.log(balances);
+       // console.log(balances);
       
         // Remove tokens with zero balance
         const nonZeroBalances = balances.tokenBalances.filter((token) => {
@@ -35,12 +38,14 @@ const Account = (props) => {
             balance = balance.toFixed(2);
           
             // Add token to list of tokens
-            setTokenBalances({ ...tokenBalances, [metadata.symbol]: { name: metadata.name, balance: balance, symbol: metadata.symbol } });
+            tokens.push({ name: metadata.name, balance: balance, symbol: metadata.symbol })
         }
+
+        setTokenBalances(tokens);
     };
 
     return (
-        <div>
+        <Card >
             <Form onSubmit={handleSubmit}>
                 <Form.Group>
                     <Form.Label>Enter Ethereum Address:</Form.Label>
@@ -50,28 +55,37 @@ const Account = (props) => {
                         onChange={(e) => setAddress(e.target.value)}
                     />
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <Button style={{margin: "15px"}} variant="primary" type="submit">
                     Get Balances
                 </Button>
             </Form>
-            {tokenBalances && (
-                <ul>
-                   {Object.values(tokenBalances).map((token) => {
-                       return (
-                           <li key={token.symbol}>
-                               {token.name}: {token.balance} {token.symbol}
-                           </li>
-                       );
-                   })}
-                </ul>
-            )}
-            {ethBalance && (
-                <p>
-                    Ether Balance: {ethBalance}{" "}
-                </p>
-            )}
-        </div>
+            {
+                tokenBalances && ethBalance && (
+            <Card.Body style={{width: 'auto' }}>
+                <ListGroup variant="flush">
+                    {tokenBalances.map((token, i) => {
+                        return (
+                            <ListGroup.Item key={`${i}: ${token.symbol}`}>
+                                {token.name}: {token.balance} {token.symbol}
+                            </ListGroup.Item>
+                        );
+                    })}
+                    <ListGroup.Item>
+                        Ether balance: {ethBalance}{" "}
+                    </ListGroup.Item>
+                </ListGroup>
+            </Card.Body>
+            )
+            }
+        </Card>
     );
 };
 
 export default Account;
+
+
+
+
+
+
+
